@@ -5524,6 +5524,7 @@ links.Timeline.prototype.stackMoveToFinal = function(currentItems, finalItems) {
 links.Timeline.prototype.stackItemsCheckOverlap = function(items, itemIndex,
                                                            itemStart, itemEnd) {
     var eventMargin = this.options.eventMargin,
+        eventHorizontalMargin = this.options.eventHorizontalMargin,
         collision = this.collision;
 
     // we loop from end to start, as we suppose that the chance of a
@@ -5531,7 +5532,7 @@ links.Timeline.prototype.stackItemsCheckOverlap = function(items, itemIndex,
     var item1 = items[itemIndex];
     for (var i = itemEnd; i >= itemStart; i--) {
         var item2 = items[i];
-        if (collision(item1, item2, eventMargin)) {
+        if (collision(item1, item2, eventMargin, eventHorizontalMargin)) {
             if (i != itemIndex) {
                 return item2;
             }
@@ -5553,15 +5554,15 @@ links.Timeline.prototype.stackItemsCheckOverlap = function(items, itemIndex,
  *                              the requested margin.
  * @return {boolean}            true if item1 and item2 collide, else false
  */
-links.Timeline.prototype.collision = function(item1, item2, margin) {
+links.Timeline.prototype.collision = function(item1, item2, margin, horizontal_margin) {
     // set margin if not specified
     if (margin == undefined) {
         margin = 0;
     }
 
     // calculate if there is overlap (collision)
-    return (item1.left - margin < item2.right &&
-        item1.right + margin > item2.left &&
+    return (item1.left - (horizontal_margin || margin) < item2.right &&
+        item1.right + (horizontal_margin || margin) > item2.left &&
         item1.top - margin < item2.bottom &&
         item1.bottom + margin > item2.top);
 };
