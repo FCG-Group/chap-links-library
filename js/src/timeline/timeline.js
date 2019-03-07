@@ -3240,15 +3240,17 @@ links.Timeline.prototype.onMouseWheel = function(event) {
         if (event.shiftKey) {
             scroll();
         }
-        else {
+        else if (event.altKey) {
             zoom();
         }
-    }
 
-    // Prevent default actions caused by mouse wheel.
-    // That might be ugly, but we handle scrolls somehow
-    // anyway, so don't bother here...
-    links.Timeline.preventDefault(event);
+        if (event.shiftKey || event.altKey) {
+            // Prevent default actions caused by mouse wheel.
+            // That might be ugly, but we handle scrolls somehow
+            // anyway, so don't bother here...
+            links.Timeline.preventDefault(event);
+        }
+    }
 };
 
 
