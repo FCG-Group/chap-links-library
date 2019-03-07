@@ -1463,7 +1463,11 @@ links.Timeline.prototype.repaintAxisMajorText = function (x, text) {
         majorTexts.push(label);
     }
 
-    label.childNodes[0].nodeValue = text;
+    //label.childNodes[0].nodeValue = text;
+    // fix: multiple call setVisibleChartRange() broke the labels
+    label.innerHTML = "";
+    label.appendChild( document.createTextNode(text) );
+
     label.style.top = size.axis.labelMajorTop + "px";
     label.style.left = x + "px";
     //label.title = title; // TODO: this is a heavy operation
