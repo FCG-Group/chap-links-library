@@ -6472,6 +6472,9 @@ links.Timeline.StepDate.prototype.getLabelMinor = function(options, date) {
         case links.Timeline.StepDate.SCALE.MINUTE:
             return this.addZeros(date.getHours(), 2) + ":" + this.addZeros(date.getMinutes(), 2);
         case links.Timeline.StepDate.SCALE.HOUR:
+            if (options["scale_mod"]) {
+                return this.addZeros(date.getHours(), 2);
+            }
             return this.addZeros(date.getHours(), 2) + ":" + this.addZeros(date.getMinutes(), 2);
         case links.Timeline.StepDate.SCALE.WEEKDAY:      return options.DAYS_SHORT[date.getDay()] + ' ' + date.getDate();
         case links.Timeline.StepDate.SCALE.DAY:          return String(date.getDate());
@@ -6510,6 +6513,16 @@ links.Timeline.StepDate.prototype.getLabelMajor = function(options, date) {
                 options.MONTHS[date.getMonth()] + " " +
                 date.getFullYear();
         case links.Timeline.StepDate.SCALE.HOUR:
+            if (options["scale_mod"]) {
+                var y = date.getFullYear() - 2000;
+                if (y < 10) {
+                    y = "0" + y;
+                }
+                return options.DAYS[date.getDay()] + ", " +
+                    date.getDate() + " " +
+                    options.MONTHS_SHORT[date.getMonth()] + " " +
+                    y;
+            }
             return  options.DAYS[date.getDay()] + " " +
                 date.getDate() + " " +
                 options.MONTHS[date.getMonth()] + " " +
