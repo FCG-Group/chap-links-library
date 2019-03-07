@@ -1961,9 +1961,8 @@ links.Timeline.prototype.repaintGroups = function() {
 
     links.Timeline.addClassName(frame, options.groupsOnRight ? 'timeline-groups-axis-onright' : 'timeline-groups-axis-onleft');
 
-    // TODO: dima 2014-03-27: new future for striped lines
     var item_even_line = false;
-    //var previous_line_top = 38;
+    var previous_line_top = 0;
 
     // position the groups
     for (var i = 0, iMax = groups.length; i < iMax; i++) {
@@ -1978,7 +1977,6 @@ links.Timeline.prototype.repaintGroups = function() {
         itemLine.style.width = size.contentWidth + "px";
 
         ///
-        // TODO: dima 2014-03-27: new future for striped lines
         labelLine.style.top = previous_line_top + "px";
         labelLine.style.height = (group.lineTop - previous_line_top) + "px";
 
