@@ -216,7 +216,7 @@ links.Timeline = function(container, options) {
         'clusterMaxItems': 5,
         'style': 'box',
         'customStackOrder': false, //a function(a,b) for determining stackorder amongst a group of items. Essentially a comparator, -ve value for "a before b" and vice versa
-        
+
         // i18n: Timeline only has built-in English text per default. Include timeline-locales.js to support more localized text.
         'locale': 'en',
         'MONTHS': ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -289,7 +289,7 @@ links.Timeline = function(container, options) {
  */
 links.Timeline.prototype.draw = function(data, options) {
     if (options) {
-        console.log("WARNING: Passing options in draw() is deprecated. Pass options to the constructur or use setOptions() instead!");       
+        console.log("WARNING: Passing options in draw() is deprecated. Pass options to the constructur or use setOptions() instead!");
         this.setOptions(options);
     }
 
@@ -2986,7 +2986,7 @@ links.Timeline.prototype.onMouseUp = function (event) {
             // Note that the change can be canceled from within an event listener if
             // this listener calls the method cancelChange().
             this.trigger(params.addItem ? 'add' : 'changed');
-            
+
             //retrieve item data again to include changes made to it in the triggered event handlers
             item = this.items[params.itemIndex];
 
@@ -4400,13 +4400,13 @@ links.Timeline.ItemFloatingRange.prototype.isVisible = function (start, end) {
         return false;
     }
 
-	// NH check for no end value
-	if (this.end && this.start) {
-		return (this.end > start)
-			&& (this.start < end);
-	} else if (this.start) {
-		return (this.start < end);
-	} else if (this.end) {
+    // NH check for no end value
+    if (this.end && this.start) {
+        return (this.end > start)
+            && (this.start < end);
+    } else if (this.start) {
+        return (this.start < end);
+    } else if (this.end) {
         return (this.end > start);
     } else {return true;}
 };
@@ -4437,11 +4437,11 @@ links.Timeline.ItemFloatingRange.prototype.setPosition = function (left, right) 
  */
 links.Timeline.ItemFloatingRange.prototype.getLeft = function (timeline) {
     // NH check for no start value
-	if (this.start) {
-		return timeline.timeToScreen(this.start);
-	} else {
-		return 0;
-	}
+    if (this.start) {
+        return timeline.timeToScreen(this.start);
+    } else {
+        return 0;
+    }
 };
 
 /**
@@ -4452,11 +4452,11 @@ links.Timeline.ItemFloatingRange.prototype.getLeft = function (timeline) {
  */
 links.Timeline.ItemFloatingRange.prototype.getRight = function (timeline) {
     // NH check for no end value
-	if (this.end) {
-		return timeline.timeToScreen(this.end);
-	} else {
-		return timeline.size.contentWidth;
-	}
+    if (this.end) {
+        return timeline.timeToScreen(this.end);
+    } else {
+        return timeline.size.contentWidth;
+    }
 };
 
 /**
@@ -4782,7 +4782,7 @@ links.Timeline.prototype.getCluster = function (index) {
     var clusterData = {},
         cluster = this.clusters[index],
         clusterItems = cluster.items;
-    
+
     clusterData.start = new Date(cluster.start.valueOf());
     if (cluster.type) {
         clusterData.type = cluster.type;
@@ -4985,14 +4985,14 @@ links.Timeline.prototype.getGroup = function (groupName) {
             groups = groups.sort(function (a, b) {
                 if (a.content > b.content) {
                     return 1;
-		        }
-		        if (a.content < b.content) {
-		            return -1;
-		        }
-		        return 0;
-        	});
+                }
+                if (a.content < b.content) {
+                    return -1;
+                }
+                return 0;
+            });
         } else if (typeof(this.options.groupsOrder) == "function") {
-        	groups = groups.sort(this.options.groupsOrder)
+            groups = groups.sort(this.options.groupsOrder)
         }
 
         // rebuilt the groupIndexes
@@ -5524,6 +5524,7 @@ links.Timeline.prototype.stackMoveToFinal = function(currentItems, finalItems) {
 links.Timeline.prototype.stackItemsCheckOverlap = function(items, itemIndex,
                                                            itemStart, itemEnd) {
     var eventMargin = this.options.eventMargin,
+        eventHorizontalMargin = this.options.eventHorizontalMargin,
         collision = this.collision;
 
     // we loop from end to start, as we suppose that the chance of a
@@ -5531,7 +5532,7 @@ links.Timeline.prototype.stackItemsCheckOverlap = function(items, itemIndex,
     var item1 = items[itemIndex];
     for (var i = itemEnd; i >= itemStart; i--) {
         var item2 = items[i];
-        if (collision(item1, item2, eventMargin)) {
+        if (collision(item1, item2, eventMargin, eventHorizontalMargin)) {
             if (i != itemIndex) {
                 return item2;
             }
@@ -5553,15 +5554,15 @@ links.Timeline.prototype.stackItemsCheckOverlap = function(items, itemIndex,
  *                              the requested margin.
  * @return {boolean}            true if item1 and item2 collide, else false
  */
-links.Timeline.prototype.collision = function(item1, item2, margin) {
+links.Timeline.prototype.collision = function(item1, item2, margin, horizontal_margin) {
     // set margin if not specified
     if (margin == undefined) {
         margin = 0;
     }
 
     // calculate if there is overlap (collision)
-    return (item1.left - margin < item2.right &&
-        item1.right + margin > item2.left &&
+    return (item1.left - (horizontal_margin || margin) < item2.right &&
+        item1.right + (horizontal_margin || margin) > item2.left &&
         item1.top - margin < item2.bottom &&
         item1.bottom + margin > item2.top);
 };
