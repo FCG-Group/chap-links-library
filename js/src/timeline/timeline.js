@@ -1965,6 +1965,10 @@ links.Timeline.prototype.repaintGroups = function() {
 
     links.Timeline.addClassName(frame, options.groupsOnRight ? 'timeline-groups-axis-onright' : 'timeline-groups-axis-onleft');
 
+    if (groups.length) {
+        previous_line_top = groups[0].top - 6;
+    }
+
     // position the groups
     for (var i = 0, iMax = groups.length; i < iMax; i++) {
         var group = groups[i],
