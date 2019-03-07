@@ -1965,6 +1965,9 @@ links.Timeline.prototype.repaintGroups = function() {
 
     links.Timeline.addClassName(frame, options.groupsOnRight ? 'timeline-groups-axis-onright' : 'timeline-groups-axis-onleft');
 
+    var item_even_line = false;
+    var previous_line_top = 0;
+
     if (groups.length) {
         previous_line_top = groups[0].top - 6;
     }
@@ -1980,6 +1983,26 @@ links.Timeline.prototype.repaintGroups = function() {
         labelLine.style.top = group.lineTop + "px";
         itemLine.style.top = group.lineTop + "px";
         itemLine.style.width = size.contentWidth + "px";
+
+        ///
+        labelLine.style.top = previous_line_top + "px";
+        labelLine.style.height = (group.lineTop - previous_line_top) + "px";
+
+        itemLine.style.top = previous_line_top + "px";
+        itemLine.style.height = (group.lineTop - previous_line_top) + "px";
+
+        previous_line_top = previous_line_top + (group.lineTop - previous_line_top);
+
+        if (item_even_line = !item_even_line)
+        {
+            itemLine.style.background = labelLine.style.background = "#F0F8FF"; // "#CCEEFF";
+            itemLine.classList.add("odd");
+            labelLine.classList.add("odd");
+        }
+        else
+            itemLine.style.background = labelLine.style.background = "#FFFFFF";
+        itemLine.style.zIndex = 0;
+        ///
     }
 
     if (!dom.groups.background) {
