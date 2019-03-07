@@ -216,7 +216,7 @@ links.Timeline = function(container, options) {
         'clusterMaxItems': 5,
         'style': 'box',
         'customStackOrder': false, //a function(a,b) for determining stackorder amongst a group of items. Essentially a comparator, -ve value for "a before b" and vice versa
-        
+
         // i18n: Timeline only has built-in English text per default. Include timeline-locales.js to support more localized text.
         'locale': 'en',
         'MONTHS': ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -289,7 +289,7 @@ links.Timeline = function(container, options) {
  */
 links.Timeline.prototype.draw = function(data, options) {
     if (options) {
-        console.log("WARNING: Passing options in draw() is deprecated. Pass options to the constructur or use setOptions() instead!");       
+        console.log("WARNING: Passing options in draw() is deprecated. Pass options to the constructur or use setOptions() instead!");
         this.setOptions(options);
     }
 
@@ -1961,6 +1961,10 @@ links.Timeline.prototype.repaintGroups = function() {
 
     links.Timeline.addClassName(frame, options.groupsOnRight ? 'timeline-groups-axis-onright' : 'timeline-groups-axis-onleft');
 
+    // TODO: dima 2014-03-27: new future for striped lines
+    var item_even_line = false;
+    //var previous_line_top = 38;
+
     // position the groups
     for (var i = 0, iMax = groups.length; i < iMax; i++) {
         var group = groups[i],
@@ -1972,6 +1976,27 @@ links.Timeline.prototype.repaintGroups = function() {
         labelLine.style.top = group.lineTop + "px";
         itemLine.style.top = group.lineTop + "px";
         itemLine.style.width = size.contentWidth + "px";
+
+        ///
+        // TODO: dima 2014-03-27: new future for striped lines
+        labelLine.style.top = previous_line_top + "px";
+        labelLine.style.height = (group.lineTop - previous_line_top) + "px";
+
+        itemLine.style.top = previous_line_top + "px";
+        itemLine.style.height = (group.lineTop - previous_line_top) + "px";
+
+        previous_line_top = previous_line_top + (group.lineTop - previous_line_top);
+
+        if (item_even_line = !item_even_line)
+        {
+            itemLine.style.background = labelLine.style.background = "#F0F8FF"; // "#CCEEFF";
+            itemLine.classList.add("odd");
+            labelLine.classList.add("odd");
+        }
+        else
+            itemLine.style.background = labelLine.style.background = "#FFFFFF";
+        itemLine.style.zIndex = 0;
+        ///
     }
 
     if (!dom.groups.background) {
@@ -2986,7 +3011,7 @@ links.Timeline.prototype.onMouseUp = function (event) {
             // Note that the change can be canceled from within an event listener if
             // this listener calls the method cancelChange().
             this.trigger(params.addItem ? 'add' : 'changed');
-            
+
             //retrieve item data again to include changes made to it in the triggered event handlers
             item = this.items[params.itemIndex];
 
@@ -4400,13 +4425,13 @@ links.Timeline.ItemFloatingRange.prototype.isVisible = function (start, end) {
         return false;
     }
 
-	// NH check for no end value
-	if (this.end && this.start) {
-		return (this.end > start)
-			&& (this.start < end);
-	} else if (this.start) {
-		return (this.start < end);
-	} else if (this.end) {
+    // NH check for no end value
+    if (this.end && this.start) {
+        return (this.end > start)
+            && (this.start < end);
+    } else if (this.start) {
+        return (this.start < end);
+    } else if (this.end) {
         return (this.end > start);
     } else {return true;}
 };
@@ -4437,11 +4462,11 @@ links.Timeline.ItemFloatingRange.prototype.setPosition = function (left, right) 
  */
 links.Timeline.ItemFloatingRange.prototype.getLeft = function (timeline) {
     // NH check for no start value
-	if (this.start) {
-		return timeline.timeToScreen(this.start);
-	} else {
-		return 0;
-	}
+    if (this.start) {
+        return timeline.timeToScreen(this.start);
+    } else {
+        return 0;
+    }
 };
 
 /**
@@ -4452,11 +4477,11 @@ links.Timeline.ItemFloatingRange.prototype.getLeft = function (timeline) {
  */
 links.Timeline.ItemFloatingRange.prototype.getRight = function (timeline) {
     // NH check for no end value
-	if (this.end) {
-		return timeline.timeToScreen(this.end);
-	} else {
-		return timeline.size.contentWidth;
-	}
+    if (this.end) {
+        return timeline.timeToScreen(this.end);
+    } else {
+        return timeline.size.contentWidth;
+    }
 };
 
 /**
@@ -4782,7 +4807,7 @@ links.Timeline.prototype.getCluster = function (index) {
     var clusterData = {},
         cluster = this.clusters[index],
         clusterItems = cluster.items;
-    
+
     clusterData.start = new Date(cluster.start.valueOf());
     if (cluster.type) {
         clusterData.type = cluster.type;
@@ -4985,14 +5010,14 @@ links.Timeline.prototype.getGroup = function (groupName) {
             groups = groups.sort(function (a, b) {
                 if (a.content > b.content) {
                     return 1;
-		        }
-		        if (a.content < b.content) {
-		            return -1;
-		        }
-		        return 0;
-        	});
+                }
+                if (a.content < b.content) {
+                    return -1;
+                }
+                return 0;
+            });
         } else if (typeof(this.options.groupsOrder) == "function") {
-        	groups = groups.sort(this.options.groupsOrder)
+            groups = groups.sort(this.options.groupsOrder)
         }
 
         // rebuilt the groupIndexes
